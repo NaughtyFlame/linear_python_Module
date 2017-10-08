@@ -42,6 +42,33 @@ class Plane(object):
             else:
                 raise e
 
+    def is_parallet_to(self, p):
+        n1 = self.normal_vector
+        n2 = p.normal_vector
+
+        return n1.is_parallet_to(n2)
+
+
+    def __eq__(self, p):
+        if self.normal_vector.is_zero():
+            if p.normal_vector.is_zero():
+                diff = self.constant_term - p.constant_term
+                return MyDecimal(diff).is_near_zero()
+            else:
+                return False
+        elif p.normal_vector.is_zero():
+            return False
+
+        if not self.is_parallet_to(p):
+            return False
+        x0 = self.basepoint
+        y0 = p.basepoint
+        line_xy = x0.minus(y0)
+
+        n1 = self.normal_vector
+
+        return n1.is_orthogonal_to(line_xy)
+
 
     def __str__(self):
 

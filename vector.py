@@ -23,6 +23,9 @@ class Vector(object):
         except TypeError:
             raise TypeError('The coordinates must be an iterable')
 
+    def __getitem__(self, index):
+        return self.coordinates[index]
+
 
     def plus(self, v):
         new_coordinates = [x+y for x,y in zip(self.coordinates, v.coordinates)]

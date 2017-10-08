@@ -30,8 +30,8 @@ class Line(object):
             c = self.constant_term
             basepoint_coords = ['0']*self.dimension
 
-            initial_index = Line.first_nonzero_index(n.coordinates)
-            initial_coefficient = n.coordinates[initial_index]
+            initial_index = Line.first_nonzero_index(n)
+            initial_coefficient = n[initial_index]
 
             basepoint_coords[initial_index] = c/initial_coefficient
             self.basepoint = Vector(basepoint_coords)
@@ -120,9 +120,9 @@ class Line(object):
         n = self.normal_vector
 
         try:
-            initial_index = Line.first_nonzero_index(n.coordinates)
-            terms = [write_coefficient(n.coordinates[i], is_initial_term=(i==initial_index)) + 'x_{}'.format(i+1)
-                     for i in range(self.dimension) if round(n.coordinates[i], num_decimal_places) != 0]
+            initial_index = Line.first_nonzero_index(n)
+            terms = [write_coefficient(n[i], is_initial_term=(i==initial_index)) + 'x_{}'.format(i+1)
+                     for i in range(self.dimension) if round(n[i], num_decimal_places) != 0]
             output = ' '.join(terms)
 
         except Exception as e:

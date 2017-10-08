@@ -43,7 +43,6 @@ class Vector(object):
         coordinates_squared = [Decimal(x)**2 for x in self.coordinates]
         return sum(coordinates_squared).sqrt()
 
-
     def normalized(self):
         try:
             magnitude = self.magnitude()

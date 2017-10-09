@@ -135,7 +135,7 @@ if not (r[0] == Plane(normal_vector=Vector(['1','0','0']), constant_term='-1') a
         r[1] == p2):
     print 'test case 1 failed'
 else:
-    print 'test case 1 succeed'
+    print r
 p1 = Plane(normal_vector=Vector(['1','1','1']), constant_term='1')
 p2 = Plane(normal_vector=Vector(['1','1','1']), constant_term='2')
 s = LinearSystem([p1,p2])
@@ -144,7 +144,7 @@ if not (r[0] == p1 and
         r[1] == Plane(constant_term='1')):
     print 'test case 2 failed'
 else:
-    print 'test case 2 succeed'
+    print r
 p1 = Plane(normal_vector=Vector(['1','1','1']), constant_term='1')
 p2 = Plane(normal_vector=Vector(['0','1','0']), constant_term='2')
 p3 = Plane(normal_vector=Vector(['1','1','-1']), constant_term='3')
@@ -157,7 +157,7 @@ if not (r[0] == Plane(normal_vector=Vector(['1','0','0']), constant_term='0') an
         r[3] == Plane()):
     print 'test case 3 failed'
 else:
-    print 'test case 3 succeed'
+    print r
 p1 = Plane(normal_vector=Vector(['0','1','1']), constant_term='1')
 p2 = Plane(normal_vector=Vector(['1','-1','1']), constant_term='2')
 p3 = Plane(normal_vector=Vector(['1','2','-5']), constant_term='3')
@@ -168,9 +168,9 @@ if not (r[0] == Plane(normal_vector=Vector(['1','0','0']), constant_term=Decimal
         r[2] == Plane(normal_vector=Vector(['0','0','1']), constant_term=Decimal('2')/Decimal('9'))):
     print 'test case 4 failed'
 else:
-    print 'test case 4 succeed'
-
+    print r
 '''
+
 
 # compute solutions
 
@@ -190,4 +190,17 @@ p2 = Plane(normal_vector=Vector(['5.111','6.358','7.638']), constant_term='-2.15
 p3 = Plane(normal_vector=Vector(['2.016','-9.924','1.367']), constant_term='-9.278')
 p4 = Plane(normal_vector=Vector(['2.167','-13.543','-18.883']), constant_term='-10.567')
 s = LinearSystem([p1,p2,p3,p4])
+print s.compute_solution()
+
+'''
+p1 = Plane(normal_vector=Vector(['','','']), constant_term='')
+p2 = Plane(normal_vector=Vector(['','','']), constant_term='')
+p3 = Plane(normal_vector=Vector(['','','']), constant_term='')
+s = LinearSystem([p1,p2,p3])
+print s.compute_solution()
+'''
+p1 = Plane(normal_vector=Vector(['1.0','-2.0','1.0']), constant_term='-5.0')
+p2 = Plane(normal_vector=Vector(['2','1','-3']), constant_term='10')
+p3 = Plane(normal_vector=Vector(['3','2','-4']), constant_term='3')
+s = LinearSystem([p1,p2,p3])
 print s.compute_solution()

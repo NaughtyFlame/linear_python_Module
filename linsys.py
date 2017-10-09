@@ -90,6 +90,7 @@ class LinearSystem(object):
     def compute_solution(self):
         try:
             return self.do_gaussian_elimination_and_extract_solution()
+
         except Exception as e:
             if (str(e) == self.NO_SOLUTIONS_MSG or
                 str(e) == self.INF_SOLUTIONS_MSG):
@@ -100,6 +101,7 @@ class LinearSystem(object):
 
     def do_gaussian_elimination_and_extract_solution(self):
         rref = self.compute_rref()
+
         rref.raise_exception_if_contradictory_equation()
         rref.raise_exception_if_too_few_pivots()
 

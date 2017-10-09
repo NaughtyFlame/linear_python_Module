@@ -99,6 +99,29 @@ class LinearSystem(object):
                 raise e
 
 
+    def compute_parametrize_solution(self):
+        try:
+            return self.do_gaussian_elimination_and_parametrize_solution()
+
+        except Exception as e:
+            if str(e) == self.NO_SOLUTIONS_MSG:
+                return str(e)
+            else:
+                raise e
+
+
+
+    def do_gaussian_elimination_and_parametrize_solution(self):
+        rref = self.compute_rref()
+
+        rref.raise_exception_if_contradictory_equation()
+
+        direction_vectors = rref.extract_direction_vectors_for_parametrization()
+        basepoint = rref.extract_basepoint_for_parametrization()
+
+        return Parametrization(basepoint, direction_vectors)
+
+
     def do_gaussian_elimination_and_extract_solution(self):
         rref = self.compute_rref()
 
@@ -110,6 +133,41 @@ class LinearSystem(object):
                                 range(num_variables)]
 
         return Vector(solution_coordinates)
+
+
+    def extract_direction_vectors_for_parametrization(self):
+        num_variables = self.dimension
+        pivot_indices = self.indices_of_first_nonzero_terms_in_each_row()
+        free_variable_indices = set(range(num_variables))- set(pivot_indices)
+
+        direction_vectors = []
+
+        for free_var in free_variable_indices:
+            vector_coords = [0] * num_variables
+            vector_coords[free_var] = 1
+            for i, p in enumerate(self.planes):
+                pivot_var = pivot_indices[i]
+                if pivot_var < 0:
+                    break
+                vector_coords[pivot_var] = -p.normal_vector[free_var]
+            direction_vectors.append(Vector(vector_coords))
+
+        return direction_vectors
+
+
+    def extract_basepoint_for_parametrization(self):
+        num_variables = self.dimension
+        pivot_indices = self.indices_of_first_nonzero_terms_in_each_row()
+
+        basepoint_coords = [0] * num_variables
+
+        for i, p in enumerate(self.planes):
+            pivot_var = pivot_indices[i]
+            if pivot_var < 0:
+                break
+            basepoint_coords[pivot_var] = p.constant_term
+
+        return Vector(basepoint_coords)
 
 
     def raise_exception_if_contradictory_equation(self):
@@ -219,6 +277,48 @@ class LinearSystem(object):
         temp = ['Equation {}: {}'.format(i+1,p) for i,p in enumerate(self.planes)]
         ret += '\n'.join(temp)
         return ret
+
+
+class Parametrization(object):
+
+    BASEPT_AND_DIR_VECTORS_MUST_BE_IN_SAME_DIM_MSG = (
+    'The basepoint and direction vectors should all live in the same dimension'
+    )
+
+    def __init__(self, basepoint, direction_vectors):
+
+        self.basepoint = basepoint
+        self.direction_vectors = direction_vectors
+        self.dimension = self.basepoint.dimension
+
+        try:
+            for v in direction_vectors:
+                assert v.dimension == self.dimension
+
+        except AssertionError:
+            raise Exception(BASEPT_AND_DIR_VECTORS_MUST_BE_IN_SAME_DIM_MSG)
+
+
+    def __str__(self):
+
+        num_decimal_places = 3
+
+        def write_coefficient(coefficient, is_initial_term=False):
+            coefficient = round(coefficient, num_decimal_places)
+
+            return str(coefficient)
+
+        b = self.basepoint
+        d = self.direction_vectors
+
+        output = ''
+        for i in range(self.dimension):
+            output += 'x_' + str(i+1) + ' = ' + write_coefficient(b[i]) + ' + '
+            temp = ['{} t_{}'.format(write_coefficient(d[j].coordinates[i]), j+1) for j in range(len(d))]
+            output += ' + '.join(temp)
+            output +='\n'
+            
+        return output
 
 
 class MyDecimal(Decimal):

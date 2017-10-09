@@ -3,6 +3,7 @@ from copy import deepcopy
 
 from vector import Vector
 from plane import Plane
+from hyperplane import Hyperplane
 
 getcontext().prec = 30
 
@@ -317,7 +318,7 @@ class Parametrization(object):
             temp = ['{} t_{}'.format(write_coefficient(d[j].coordinates[i]), j+1) for j in range(len(d))]
             output += ' + '.join(temp)
             output +='\n'
-            
+
         return output
 
 
